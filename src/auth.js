@@ -9,6 +9,9 @@ export const VERDICT_TTL_SECONDS = 300;
 const MEMO_MAX = 10_000;
 const memo = new Map(); // verdict key -> expiry (ms)
 
+// The Workers Cache API only stores Request -> Response pairs, so a verdict is saved as a
+// fake response under a made-up URL. `.invalid` is a reserved TLD (RFC 2606): the URL can
+// never be fetched or collide with a real one. The key is a hash, so no credential is in it.
 function verdictRequest(key) {
   return new Request(`https://freeport-verdict.invalid/${key}`);
 }
