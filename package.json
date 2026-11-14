@@ -1,0 +1,20 @@
+{
+  "name": "freeport",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "dev": "wrangler dev",
+    "deploy": "terraform/tf.sh apply",
+    "warm": "node scripts/warm.mjs",
+    "build": "wrangler deploy --dry-run --outdir dist"
+  },
+  "devDependencies": {
+    "@cloudflare/vitest-plugin": "^1.8.0",
+    "vitest": "^4.1.12",
+    "wrangler": "^4.160.1"
+  },
+  "dependencies": {
+    "@noble/hashes": "2.4.0"
+  }
+}

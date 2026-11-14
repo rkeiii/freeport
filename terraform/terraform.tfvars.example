@@ -1,0 +1,4 @@
+account_id   = "<cloudflare account id>"
+zone_id      = "<cloudflare zone id>"
+hostname     = "freeport.example.com"
+ecr_registry = "123456789012.dkr.ecr.us-east-1.amazonaws.com"

@@ -1,0 +1,29 @@
+// Local dev and tests only (wrangler dev, vitest). Deployed config: terraform/. See docs/DEPLOY.md.
+{
+  "name": "freeport",
+  "main": "src/index.js",
+  "compatibility_date": "2026-11-01",
+  "vars": {
+    // The ECR registry Freeport fronts. One Worker = one registry.
+    "ECR_REGISTRY": "123456789012.dkr.ecr.us-east-1.amazonaws.com",
+    // Copier: bytes per multipart part, and parts fetched at once.
+    // PART_SIZE x COPY_CONCURRENCY must stay well under the 128 MB isolate limit.
+    "PART_SIZE": "8388608",
+    "COPY_CONCURRENCY": "2",
+    // Per queue invocation: copy at most this many bytes, or until a timer at this many
+    // seconds aborts the fetches in flight; then save progress and re-queue. Keeps each
+    // invocation under 15 min wall and 5 min CPU (hashing is ~300 MB/s, so 32 GiB ~110 s).
+    "COPY_SLICE_BYTES": "34359738368",
+    "COPY_BUDGET_SECONDS": "870"
+  },
+  "r2_buckets": [{ "binding": "BLOBS", "bucket_name": "freeport-blobs" }],
+  "queues": {
+    "producers": [{ "binding": "COPY", "queue": "freeport-copy" }],
+    "consumers": [
+      { "queue": "freeport-copy", "max_batch_size": 1, "max_retries": 3, "max_concurrency": 2 }
+    ]
+  },
+  // Hashing a 32 GiB slice needs more than the 30 s default CPU.
+  "limits": { "cpu_ms": 300000 },
+  "observability": { "enabled": true }
+}

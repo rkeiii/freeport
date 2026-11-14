@@ -1,0 +1,3 @@
+bucket = "<your-tfstate-bucket>"
+key    = "freeport/terraform.tfstate"
+region = "us-east-1"

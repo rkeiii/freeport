@@ -1,0 +1,12 @@
+# Append to the image's CodeBuild buildspec, after `docker push` to ECR.
+# Needs: this repo's scripts/warm.mjs + src/warm.js (or `git clone` it), Node 18+,
+# and the build role's existing ECR pull permission. No new IAM.
+#
+# FREEPORT_HOST  e.g. freeport.example.com
+# IMAGE_REPO     ECR repo name, e.g. ml/worker
+# IMAGE_TAG      the tag just pushed
+version: 0.2
+phases:
+  post_build:
+    commands:
+      - aws ecr get-login-password | node freeport/scripts/warm.mjs "$FREEPORT_HOST/$IMAGE_REPO:$IMAGE_TAG" --platform linux/amd64 --wait --timeout 1800
