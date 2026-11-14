@@ -16,5 +16,6 @@
   },
   "dependencies": {
     "@noble/hashes": "2.4.0"
-  }
+  },
+  "version": "2026.11.0"
 }
